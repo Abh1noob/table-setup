@@ -1,8 +1,6 @@
 "use client";
 
-import { type Row } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -17,17 +15,23 @@ import {
   DropdownMenuTrigger,
   DropdownMenuShortcut,
 } from "../ui/dropdown-menu";
-import { labels } from "@/data/data";
 
-interface DataTableRowActionsProps<TData extends { label: string }> {
+interface LabelOption {
+  label: string;
+  value: string;
+}
+
+interface DataTableRowActionsProps<TData extends { label?: string }> {
   row: TData;
+  labels?: LabelOption[];
   onDelete?: (task: TData) => void;
   onEdit?: (task: TData) => void;
   onLabelChange?: (task: TData, newLabel: string) => void;
 }
 
-export function DataTableRowActions<TData extends { label: string }>({
+export function DataTableRowActions<TData extends { label?: string | undefined; }>({
   row,
+  labels,
   onDelete,
   onEdit,
   onLabelChange,
@@ -47,7 +51,8 @@ export function DataTableRowActions<TData extends { label: string }>({
         <DropdownMenuItem onClick={() => onEdit?.(row)}>Edit</DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
-        {typeof row.label === "string" && (
+
+        {labels && typeof row.label === "string" && (
           <>
             <DropdownMenuSeparator />
             <DropdownMenuSub>
@@ -70,6 +75,7 @@ export function DataTableRowActions<TData extends { label: string }>({
             </DropdownMenuSub>
           </>
         )}
+
         <DropdownMenuItem onClick={() => onDelete?.(row)}>
           Delete
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>

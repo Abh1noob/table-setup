@@ -117,7 +117,7 @@ const columns: ColumnDef<Task>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row.original} />
+    cell: ({ row }) => <DataTableRowActions row={row.original} labels={labels}/>
   },
 ];
 
