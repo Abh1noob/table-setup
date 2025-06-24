@@ -2,7 +2,7 @@ import { UserNav } from "@/components/user-nav";
 
 import columns from "@/components/columns";
 import { type Metadata } from "next";
-import { tasks } from "../data/data";
+import { priorities, statuses, tasks } from "../data/data";
 import { DataTable } from "@/components/table/data-table";
 
 export const metadata: Metadata = {
@@ -25,7 +25,22 @@ export default async function TaskPage() {
             <UserNav />
           </div>
         </div>
-        <DataTable data={tasks} columns={columns} />
+        <DataTable
+          columns={columns}
+          data={tasks}
+          filters={[
+            {
+              columnId: "status",
+              title: "Status",
+              options: statuses,
+            },
+            {
+              columnId: "priority",
+              title: "Priority",
+              options: priorities,
+            },
+          ]}
+        />
       </div>
     </>
   );

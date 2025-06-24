@@ -1,10 +1,11 @@
 import * as React from "react";
 import { type Column } from "@tanstack/react-table";
-import { Check, Command, PlusCircle } from "lucide-react";
+import { Check, PlusCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
+  Command,
   CommandInput,
   CommandList,
   CommandEmpty,
@@ -37,12 +38,17 @@ export function DataTableFacetedFilter<TData, TValue>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircle />
-          {title}
-          {selectedValues?.size > 0 && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex h-8 items-center gap-2 border-dashed"
+        >
+          <PlusCircle className="h-4 w-4 shrink-0" />
+          <span className="truncate">{title}</span>
+
+          {selectedValues.size > 0 && (
             <>
-              <Separator orientation="vertical" className="mx-2 h-4" />
+              <Separator orientation="vertical" className="mx-1 h-4" />
               <Badge
                 variant="secondary"
                 className="rounded-sm px-1 font-normal lg:hidden"
@@ -75,11 +81,20 @@ export function DataTableFacetedFilter<TData, TValue>({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0" align="start">
+
+      <PopoverContent
+        className="w-[240px] p-0 animate-in fade-in slide-in-from-top-1"
+        align="start"
+      >
         <Command>
-          <CommandInput placeholder={title} />
+          <CommandInput
+            placeholder={`Filter ${title}...`}
+            className="w-full border-b px-3 py-2 text-sm outline-none placeholder:text-muted-foreground"
+          />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty className="px-3 py-4 text-center text-sm text-muted-foreground">
+              No results found.
+            </CommandEmpty>{" "}
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value);
@@ -97,23 +112,24 @@ export function DataTableFacetedFilter<TData, TValue>({
                         filterValues.length ? filterValues : undefined,
                       );
                     }}
+                    className="flex items-center gap-2 px-3 py-2"
                   >
                     <div
                       className={cn(
-                        "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
+                        "flex h-4 w-4 items-center justify-center rounded-sm border border-primary transition-colors",
                         isSelected
                           ? "bg-primary text-primary-foreground"
                           : "opacity-50 [&_svg]:invisible",
                       )}
                     >
-                      <Check />
+                      <Check className="h-3 w-3" />
                     </div>
                     {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
+                      <option.icon className="h-4 w-4 text-muted-foreground" />
                     )}
-                    <span>{option.label}</span>
+                    <span className="flex-1 truncate">{option.label}</span>
                     {facets?.get(option.value) && (
-                      <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                      <span className="ml-auto font-mono text-xs text-muted-foreground">
                         {facets.get(option.value)}
                       </span>
                     )}
@@ -127,7 +143,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 <CommandGroup>
                   <CommandItem
                     onSelect={() => column?.setFilterValue(undefined)}
-                    className="justify-center text-center"
+                    className="justify-center cursor-pointer text-center text-sm text-muted-foreground hover:text-foreground"
                   >
                     Clear filters
                   </CommandItem>
